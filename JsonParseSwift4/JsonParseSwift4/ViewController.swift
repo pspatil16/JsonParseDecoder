@@ -17,12 +17,16 @@ struct strctJson:Decodable {
     let population:Int
 }
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+    
+    
  var arrData = [strctJson]()
     
+    @IBOutlet weak var tbl1: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         getData()
+        
     }
     
     func  getData()  {
@@ -34,6 +38,11 @@ class ViewController: UIViewController {
                     
                     for mainArr in self.arrData{
                         print("Name:\(mainArr.name),  Capital:\(mainArr.capital),  Region:\(mainArr.region), Population:\(mainArr.population)")
+                        
+                        DispatchQueue.main.async {
+                            self.tbl1.reloadData()
+                        }
+                        
                     }
                 }
             }
@@ -42,6 +51,20 @@ class ViewController: UIViewController {
             }
             
         }.resume()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return arrData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! TableViewCell
+        cell.nameLbl.text = arrData[indexPath.row].name
+        cell.lblCpital.text = arrData[indexPath.row].capital
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        <#code#>
     }
 
     override func didReceiveMemoryWarning() {
